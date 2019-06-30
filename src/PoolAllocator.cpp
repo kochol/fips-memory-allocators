@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include <stdlib.h>     /* malloc, free */
 #include <algorithm>    //max
-#ifdef _DEBUG
-#include <iostream>
-#endif
+//#ifdef _DEBUG
+//#include <iostream>
+//#endif
 
 PoolAllocator::PoolAllocator(const std::size_t totalSize, const std::size_t chunkSize)
 : Allocator(totalSize) {
@@ -32,9 +32,9 @@ void *PoolAllocator::Allocate(const std::size_t allocationSize, const std::size_
 
     m_used += m_chunkSize;
     m_peak = std::max(m_peak, m_used);
-#ifdef _DEBUG
-    std::cout << "A" << "\t@S " << m_start_ptr << "\t@R " << (void*) freePosition << "\tM " << m_used << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "A" << "\t@S " << m_start_ptr << "\t@R " << (void*) freePosition << "\tM " << m_used << std::endl;
+//#endif
 
     return (void*) freePosition;
 }
@@ -44,9 +44,9 @@ void PoolAllocator::Free(void * ptr) {
 
     m_freeList.push((Node *) ptr);
 
-#ifdef _DEBUG
-    std::cout << "F" << "\t@S " << m_start_ptr << "\t@F " << ptr << "\tM " << m_used << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "F" << "\t@S " << m_start_ptr << "\t@F " << ptr << "\tM " << m_used << std::endl;
+//#endif
 }
 
 void PoolAllocator::Reset() {

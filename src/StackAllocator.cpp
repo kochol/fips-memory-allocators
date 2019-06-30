@@ -2,9 +2,9 @@
 #include "Utils.h"  /* CalculatePadding */
 #include <stdlib.h>     /* malloc, free */
 #include <algorithm>    /* max */
-#ifdef _DEBUG
-#include <iostream>
-#endif
+//#ifdef _DEBUG
+//#include <iostream>
+//#endif
 
 StackAllocator::StackAllocator(const std::size_t totalSize)
 : Allocator(totalSize) {
@@ -42,9 +42,9 @@ void* StackAllocator::Allocate(const std::size_t size, const std::size_t alignme
     
     m_offset += size;
 
-#ifdef _DEBUG
-    std::cout << "A" << "\t@C " << (void*) currentAddress << "\t@R " << (void*) nextAddress << "\tO " << m_offset << "\tP " << padding << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "A" << "\t@C " << (void*) currentAddress << "\t@R " << (void*) nextAddress << "\tO " << m_offset << "\tP " << padding << std::endl;
+//#endif
     m_used = m_offset;
     m_peak = std::max(m_peak, m_used);
 
@@ -60,9 +60,9 @@ void StackAllocator::Free(void *ptr) {
     m_offset = currentAddress - allocationHeader->padding - (std::size_t) m_start_ptr;
     m_used = m_offset;
 
-#ifdef _DEBUG
-    std::cout << "F" << "\t@C " << (void*) currentAddress << "\t@F " << (void*) ((char*) m_start_ptr + m_offset) << "\tO " << m_offset << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "F" << "\t@C " << (void*) currentAddress << "\t@F " << (void*) ((char*) m_start_ptr + m_offset) << "\tO " << m_offset << std::endl;
+//#endif
 }
 
 void StackAllocator::Reset() {

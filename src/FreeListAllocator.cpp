@@ -5,9 +5,9 @@
 #include <limits>  /* limits_max */
 #include <algorithm>    // std::max
 
-#ifdef _DEBUG
-#include <iostream>
-#endif
+//#ifdef _DEBUG
+//#include <iostream>
+//#endif
 
 FreeListAllocator::FreeListAllocator(const std::size_t totalSize, const PlacementPolicy pPolicy)
 : Allocator(totalSize) {
@@ -65,9 +65,9 @@ void* FreeListAllocator::Allocate(const std::size_t size, const std::size_t alig
     m_used += requiredSize;
     m_peak = std::max(m_peak, m_used);
 
-#ifdef _DEBUG
-    std::cout << "A" << "\t@H " << (void*) headerAddress << "\tD@ " <<(void*) dataAddress << "\tS " << ((FreeListAllocator::AllocationHeader *) headerAddress)->blockSize <<  "\tAP " << alignmentPadding << "\tP " << padding << "\tM " << m_used << "\tR " << rest << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "A" << "\t@H " << (void*) headerAddress << "\tD@ " <<(void*) dataAddress << "\tS " << ((FreeListAllocator::AllocationHeader *) headerAddress)->blockSize <<  "\tAP " << alignmentPadding << "\tP " << padding << "\tM " << m_used << "\tR " << rest << std::endl;
+//#endif
 
     return (void*) dataAddress;
 }
@@ -146,9 +146,9 @@ void FreeListAllocator::Free(void* ptr) {
     // Merge contiguous nodes
     Coalescence(itPrev, freeNode);  
 
-#ifdef _DEBUG
-    std::cout << "F" << "\t@ptr " <<  ptr <<"\tH@ " << (void*) freeNode << "\tS " << freeNode->data.blockSize << "\tM " << m_used << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "F" << "\t@ptr " <<  ptr <<"\tH@ " << (void*) freeNode << "\tS " << freeNode->data.blockSize << "\tM " << m_used << std::endl;
+//#endif
 }
 
 void FreeListAllocator::Coalescence(Node* previousNode, Node * freeNode) {   
@@ -156,18 +156,18 @@ void FreeListAllocator::Coalescence(Node* previousNode, Node * freeNode) {
             (std::size_t) freeNode + freeNode->data.blockSize == (std::size_t) freeNode->next) {
         freeNode->data.blockSize += freeNode->next->data.blockSize;
         m_freeList.remove(freeNode, freeNode->next);
-#ifdef _DEBUG
-    std::cout << "\tMerging(n) " << (void*) freeNode << " & " << (void*) freeNode->next << "\tS " << freeNode->data.blockSize << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "\tMerging(n) " << (void*) freeNode << " & " << (void*) freeNode->next << "\tS " << freeNode->data.blockSize << std::endl;
+//#endif
     }
     
     if (previousNode != nullptr &&
             (std::size_t) previousNode + previousNode->data.blockSize == (std::size_t) freeNode) {
         previousNode->data.blockSize += freeNode->data.blockSize;
         m_freeList.remove(previousNode, freeNode);
-#ifdef _DEBUG
-    std::cout << "\tMerging(p) " << (void*) previousNode << " & " << (void*) freeNode << "\tS " << previousNode->data.blockSize << std::endl;
-#endif
+//#ifdef _DEBUG
+//    std::cout << "\tMerging(p) " << (void*) previousNode << " & " << (void*) freeNode << "\tS " << previousNode->data.blockSize << std::endl;
+//#endif
     }
 }
 
