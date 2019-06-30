@@ -15,8 +15,8 @@ fips_setup()
             Allocator.cpp 
             CAllocator.cpp 
             LinearAllocator.cpp 
-            StackAllocator 
-            PoolAllocator 
+            StackAllocator.cpp
+            PoolAllocator.cpp
             FreeListAllocator.cpp 
         )
 
