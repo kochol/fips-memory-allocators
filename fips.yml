@@ -1,0 +1,9 @@
+#
+# fips-memory-allocators
+#
+---
+exports:
+    header-dirs : [ 'includes'  ]
+    modules:
+        memory-allocators:   .
+

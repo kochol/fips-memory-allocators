@@ -1,21 +1,25 @@
 # CMake entry point
 cmake_minimum_required (VERSION 3.5)
-project (memory-allocators)
 
-## Add headers files
-include_directories (
-	includes/
-)
+# include the fips main cmake file
+get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
+include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
 
+fips_setup()
+    fips_project(fips-memory-allocators)
 
-set(SOURCES src/Allocator.cpp src/CAllocator.cpp src/LinearAllocator.cpp src/StackAllocator src/PoolAllocator src/FreeListAllocator.cpp src/Benchmark.cpp src/main.cpp)
+    fips_begin_lib(memory-allocators)
 
-add_compile_options(
-	-std=c++11
-#        -D_DEBUG
-#        -g
-) 
+        fips_dir(src)
+        fips_files(
+            Allocator.cpp 
+            CAllocator.cpp 
+            LinearAllocator.cpp 
+            StackAllocator 
+            PoolAllocator 
+            FreeListAllocator.cpp 
+        )
 
-# main.cpp
-add_executable(main ${SOURCES})
-target_link_libraries(main)
+    fips_end_lib(memory-allocators)
+
+fips_finish()
