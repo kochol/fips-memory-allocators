@@ -33,7 +33,7 @@ void* FreeListAllocator::Allocate(const std::size_t size, const std::size_t alig
     const std::size_t allocationHeaderSize = sizeof(FreeListAllocator::AllocationHeader);
     const std::size_t freeHeaderSize = sizeof(FreeListAllocator::FreeHeader);
     assert("Allocation size must be bigger" && size >= sizeof(Node));
-    assert("Alignment must be 8 at least" && alignment >= 8);
+    //assert("Alignment must be 8 at least" && alignment >= 8);
 
     // Search through the free list for a free block that has enough space to allocate our data
     std::size_t padding;
@@ -46,13 +46,15 @@ void* FreeListAllocator::Allocate(const std::size_t size, const std::size_t alig
     const std::size_t alignmentPadding =  padding - allocationHeaderSize;
     const std::size_t requiredSize = size + padding;    
 
-    const std::size_t rest = affectedNode->data.blockSize - requiredSize;
+    std::size_t rest = affectedNode->data.blockSize - requiredSize - alignmentPadding;
 
-    if (rest > 0) {
+    if (rest > allocationHeaderSize) 
+    {
         // We have to split the block into the data block and a free block of size 'rest'
-        Node * newFreeNode = (Node *)((std::size_t) affectedNode + requiredSize);
+        Node * newFreeNode = (Node *)((std::size_t) affectedNode + requiredSize + alignmentPadding);
         newFreeNode->data.blockSize = rest;
         m_freeList.insert(affectedNode, newFreeNode);
+        rest = 0;
     }
     m_freeList.remove(previousNode, affectedNode);
 
@@ -60,7 +62,7 @@ void* FreeListAllocator::Allocate(const std::size_t size, const std::size_t alig
     const std::size_t headerAddress = (std::size_t) affectedNode + alignmentPadding;
     const std::size_t dataAddress = headerAddress + allocationHeaderSize;
     ((FreeListAllocator::AllocationHeader *) headerAddress)->blockSize = requiredSize;
-    ((FreeListAllocator::AllocationHeader *) headerAddress)->padding = alignmentPadding;
+    ((FreeListAllocator::AllocationHeader *) headerAddress)->padding = alignmentPadding + rest;
 
     m_used += requiredSize;
     m_peak = std::max(m_peak, m_used);
