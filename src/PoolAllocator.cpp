@@ -28,7 +28,8 @@ void *PoolAllocator::Allocate(const std::size_t allocationSize, const std::size_
 
     Node * freePosition = m_freeList.pop();
 
-    assert(freePosition != nullptr && "The pool allocator is full");
+    if (freePosition == nullptr) // The pool allocator is full
+        return nullptr;
 
     m_used += m_chunkSize;
     m_peak = std::max(m_peak, m_used);
